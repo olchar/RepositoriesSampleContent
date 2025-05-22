@@ -9,7 +9,7 @@ name: Deploy Content to LAW-MngEnvMCAP402998 [ec36f9ec-ceca-402b-a4bf-b892089644
 #   2. Append the path to the directory environment variable below
 #       directory: '${{ github.workspace }}/SentinelContent'
 
-on: 
+on:
   push:
     branches: [ main ]
     paths:
@@ -27,7 +27,7 @@ jobs:
       directory: '${{ github.workspace }}'
       cloudEnv: 'AzureCloud'
       creds: ${{ secrets.AZURE_SENTINEL_CREDENTIALS_ec36f9ecceca402ba4bfb8920896440f }}
-      contentTypes: 'Workbook,AnalyticsRule'
+      contentTypes: 'Workbook,AnalyticsRule,AutomationRule,HuntingQuery'
       branch: 'main'
       sourceControlId: 'ec36f9ec-ceca-402b-a4bf-b8920896440f'
       rootDirectory: '${{ github.workspace }}'
@@ -49,7 +49,7 @@ jobs:
     - name: Wait 30 seconds if login attempt 1 failed
       if: ${{ env.cloudEnv == 'AzureCloud' && steps.login1.outcome=='failure' }}
       run: powershell Start-Sleep -s 30
-    
+
     - name: Login to Azure (Attempt 2)
       continue-on-error: true
       id: login2
@@ -62,7 +62,7 @@ jobs:
     - name: Wait 30 seconds if login attempt 2 failed
       if: ${{ env.cloudEnv == 'AzureCloud' && steps.login2.outcome=='failure' }}
       run: powershell Start-Sleep -s 30
-    
+
     - name: Login to Azure (Attempt 3)
       continue-on-error: false
       id: login3
@@ -74,7 +74,7 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v3
-    
+
     - name: Deploy Content to Microsoft Sentinel
       uses: azure/powershell@v1
       with:
